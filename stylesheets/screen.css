@@ -1,11 +1,13 @@
 /* general --------------------- */
 
 p {
-  font: 1.4em "ff-tisa-web-pro-1","ff-tisa-web-pro-2";
+/*  font: 1.4em "ff-tisa-web-pro-1","ff-tisa-web-pro-2"; */
+  font: 1.4em "PT Serif", serif;
 }
 
 ol li, ul li {
-  font: 1em "ff-tisa-web-pro-1","ff-tisa-web-pro-2";
+ /* font: 1em "ff-tisa-web-pro-1","ff-tisa-web-pro-2"; */
+  font: 1em "PT Serif", serif;
 }
 
 p+p, p+ol, p+ul {
@@ -55,7 +57,8 @@ sup {
 
 aside p {
   color:         #999;
-  font-family:   "ff-tisa-web-pro-1","ff-tisa-web-pro-2";
+ /* font-family:   "ff-tisa-web-pro-1","ff-tisa-web-pro-2"; */
+  font-family:   "PT Serif", serif;
   font-size:     1.2em;
   line-height:   1.3em;
 }
@@ -113,7 +116,8 @@ section#masthead p {
 }
 
 section#masthead h1 {
-  font:        italic 2em "ff-tisa-web-pro-1","ff-tisa-web-pro-2";
+ /* font:        italic 2em "ff-tisa-web-pro-1","ff-tisa-web-pro-2"; */
+  font:        italic 2em "PT Serif" serif;
   float:       left;
   width:       39.45%;
   text-align:  right;
@@ -128,7 +132,8 @@ section#masthead header img {
 }
 
 section#masthead header p {
-  font:          300 9em "atrament-web-1", "atrament-web-2";
+/*  font:          300 9em "atrament-web-1", "atrament-web-2"; */
+  font:          300 9em "Yanone Kaffeesatz" sans-serif;
   width:         57.5%;
   margin-bottom: 45px;
   line-height:   .9em;
@@ -283,7 +288,8 @@ article blockquote {
   width:       475px;
   padding:     0 50px;
   text-indent: 25px;
-  font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2";
+ /* font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2"; */
+  font-family: "PT Serif" serif;
 }
 
 article blockquote:before, article blockquote:after {
