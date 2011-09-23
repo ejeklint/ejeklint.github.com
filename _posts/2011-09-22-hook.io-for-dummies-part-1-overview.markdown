@@ -1,0 +1,56 @@
+---
+title: Hook.io For Dummies, Part 1 - Introduction
+date: 2011-09-23
+excerpt: An high level and quite basic overview of hook.io, an I/O framework for node.js that makes it easy to create highly modularized and loosely coupled applications.
+category: tutorial
+layout: post
+---
+
+I recently jumped on the [node.js][] wagon and began browsing around for interesting ideas associated with it. (If you don't know anything about node.js, stop reading now.) A few days ago I stumbled upon [hook.io][] and immediately felt it might be a little game-changer; something to invest knowledge in so you can hang out with the cool guys at JSConf and to keep up appearance in spite of having turned 50 or so. But the lack of a more slowly paced introduction for guys and gals that prefer a little more smooth-talking before going hard core with code was frustrating, so I decided to take on a grand endeavor and write the very first "Hook.io For Dummies" blog entry. All for my own education. Well, voilá, here it is. If it's helpful for someone else I'm happy.
+
+## What is hook.io?
+
+Let's pull a quote from the worlds first hook.io [blog entry][firstblog] by [Charlie Robbins][charlie]:
+
+> Hook.io is a full-featured I/O framework for node.js that enables a simple way to distribute your application across multiple node.js processes using the new EventEmitter2 API and leveraging the power of Crash-only software.
+
+So the basic idea behind [hook.io][] is to create a framework that enables use of small processes, each focused on solving one particular task, that forms building blocks for larger and more complex applications. Instead of tossing all functionality of a large, multi-IO application into one and the same program running in one process, you can build up your application piece by piece by gradually adding small processes that communicates by sending and listening to events.
+
+![Monolith](/images/mono.png "Monolithic, baaad.")
+
+![Multi-process](/images/multi.png "Non-monolithic, goood.")
+
+[hook.io][] provides the I/O framework for doing exactly this in [node.js][]. Each process is called a "hook" and implements a TCP server or client, each capable of sending event messages over a TCP socket, or just listening for events.
+
+![The Hook cloud](/images/hook-cloud.png "Hook Cloud, veery goood.")
+
+A major advantage of this [cool and sassy][sassy] approach is that applications will almost by magic become more robust and efficient. Since each of the processes run independent of each other, the system as a whole will not suffer if one process should crash. They are loosely connected only by sending and listening for events. [hook.io][] also take good care to keep the hooks up and running by automatically restarting them if a crash occur. Also, since the application is divided into several separate processes it will make more efficient use of modern, multi-core hardware.
+
+The first hook to start up automatically becomes the _server hook_, sometimes referred to as the _parent hook_. All events sent will be channeled through this server hook. After this, all launched hooks automatically becomes clients and connects to the server hook. You will later find out that you programmatically can setup a hook in many ways and let you, and not the launch order to decide who becomes server hook, but the automatic approach is fine for most of the time.
+
+![Hook server and clients](/images/server-clients.png "A server hook and three clients")
+
+## What Does A Real Hook.io Application Look Like?
+
+In part 2 of this this series, we will build a simple hook.io-based application, but before that it's worth considering a good praxis that I suspect will be common, and it concerns the server hook, the one that is first launched (or explicitly told to start as server). It is the server hook's responsibility to listen for all incoming events and re-distribute them to all clients, except the one that sent the event. So it becomes a single point of failure; should it be stopped for some reason, like adding new functionality to it, the application as a whole will stop working since no events will be propagated.
+
+It is thus fairly safe to say that a good design pattern is to have a server hook that does nothing more than being the server. In his nice and short [video tutorias][videos], Marak Squires calls it the "vanilla hook". It contains no custom code what so ever. In fact, it's so simple that I can show it right now, you won't faint:
+
+{% highlight javascript %}
+	var Hook = require('hookio').Hook;
+	var hook = new Hook();
+	hook.start();
+{% endhighlight %}
+
+This hook does nothing except being a hook. As long as it is started first and thus become the server hook, it will listen for incoming events and redistribute them to connected client hooks. That's all.  So with this said about the "vanilla hook", I end this chapter with an updated illustration of what a hook.io-based application might look like. See you in next chapter, If I ever finish it. :)
+
+![Hook server and clients](/images/hook-app.png "A hook.io application, roughly")
+
+
+[sassy]: http://www.wikihow.com/Be-Sassy-but-Cool "At least Marak has a cool hat :)"
+[hook.io]: https://github.com/hookio/hook.io "hook.io on github"
+[node.js]: http://nodejs.org/ "Evented I/O for V8 JavaScript"
+[firstblog]: http://blog.nodejitsu.com/distribute-nodejs-apps-with-hookio "The first blog about hook.io"
+[videos]: https://github.com/hookio/tutorials "Short and very code-centric video tuts"
+[marak]: https://github.com/Marak "Marak Squires on GitHub"
+[charlie]: https://github.com/indexzero "Charlie Robbins on github"
