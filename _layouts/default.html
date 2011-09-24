@@ -26,7 +26,7 @@
       <section id="masthead" class="group">
         <header class="group">
           <p><img src="/images/ptarmigan230x180.png"><a href="/">Skeptical Ptarmigan</a></p>
-          <h1>Fancy headline to the right</h1>
+        <!--  <h1>Fancy headline to the right</h1> -->
         </header>
       </section>
 
@@ -66,32 +66,29 @@
 
         </section>
         
-        
-
       </section>
       
-	      {% if page.comments %}
-	      <section id="comments" class="group">
-	        <!--a href="http://example.com/article1.html#disqus_thread" data-disqus-identifier="{{ page.url }}">First article</a-->
-			<div id="disqus_thread"></div>
-			<script type="text/javascript">
-			    var disqus_shortname = 'ejeklint';		    
-			    var disqus_identifier = '{{ page.url }}';
-			    var disqus_developer = 1;
-			    //var disqus_url = '{{ site.meta.absolute_baseurl }}{{ page.url }}';
-			    
-			    /* * * DON'T EDIT BELOW THIS LINE * * */
-			    (function() {
-			        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-			        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			    })();
-			</script>
-			<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-			<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-	      </section>
-	      {% endif %}
-
+      {% if page.comments %}
+      <section id="comments" class="group">
+        <!--a href="http://example.com/article1.html#disqus_thread" data-disqus-identifier="{{ page.url }}">First article</a-->
+		<div id="disqus_thread"></div>
+		<script type="text/javascript">
+		    var disqus_shortname = 'ejeklint';		    
+		    var disqus_identifier = '{{ page.url }}';
+		    var disqus_developer = 1;
+		    //var disqus_url = '{{ site.meta.absolute_baseurl }}{{ page.url }}';
+		    
+		    /* * * DON'T EDIT BELOW THIS LINE * * */
+		    (function() {
+		        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+		        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+		    })();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      {% endif %}
 
       <section id="footer" class="group">
         <footer class="group">
@@ -109,8 +106,6 @@
       </section>
       
     </section>
-    
-    
 
     <script type="text/javascript">
 
