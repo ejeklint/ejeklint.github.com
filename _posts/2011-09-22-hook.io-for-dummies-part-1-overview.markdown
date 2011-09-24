@@ -10,7 +10,9 @@ I recently jumped on the [node.js][] wagon and began browsing around for interes
 
 ## What is hook.io?
 
-Let's pull a quote from the worlds first hook.io [blog entry][firstblog] by [Charlie Robbins][charlie]:
+[hook.io][] is the brainchild of [Marak Squires][marak] and it's currently in version 0.7-something. But it's not that new, Marak has been working on and off with it since 2006, and it's now in its 7th iteration. So there's a lot of thinking and refactoring in it. Which, of course, explains its beauty.
+
+To get started, let's pull a quote from the worlds first hook.io [blog entry][firstblog] by [Charlie Robbins][charlie]:
 
 > Hook.io is a full-featured I/O framework for node.js that enables a simple way to distribute your application across multiple node.js processes using the new EventEmitter2 API and leveraging the power of Crash-only software.
 
@@ -34,7 +36,7 @@ The first hook to start up automatically becomes the _server hook_, sometimes re
 
 In part 2 of this this series, we will build a simple hook.io-based application, but before that it's worth considering a good praxis that I suspect will be common, and it concerns the server hook, the one that is first launched (or explicitly told to start as server). It is the server hook's responsibility to listen for all incoming events and re-distribute them to all clients, except the one that sent the event. So it becomes a single point of failure; should it be stopped for some reason, like adding new functionality to it, the application as a whole will stop working since no events will be propagated.
 
-It is thus fairly safe to say that a good design pattern is to have a server hook that does nothing more than being the server. In his nice and short [video tutorias][videos], Marak Squires calls it the "vanilla hook". It contains no custom code what so ever. In fact, it's so simple that I can show it right now, you won't faint:
+It is thus fairly safe to say that a good design pattern is to have a server hook that does nothing more than being the server. In his nice and short [video tutorias][videos], Marak calls it the "vanilla hook". It contains no custom code what so ever. In fact, it's so simple that I can show it right now, you won't faint:
 
 {% highlight javascript %}
 	var Hook = require('hookio').Hook;
