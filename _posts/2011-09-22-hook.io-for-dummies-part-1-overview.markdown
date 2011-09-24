@@ -10,7 +10,7 @@ I recently jumped on the [node.js][] wagon and began browsing around for interes
 
 ## What is hook.io?
 
-[hook.io][] is the brainchild of [Marak Squires][marak] and it's currently in version 0.7-something. But it's not that new, Marak has been working on and off with it since 2006, and it's now in its 7th iteration. So there's a lot of thinking and refactoring in it. Which, of course, explains its beauty.
+[hook.io][] is the brainchild of [Marak Squires][marak] and it's currently in version 0.7-something. But it's not that new, Marak has been working on it since 2006, and it's now in its 7th iteration. So there's a lot of thinking and refactoring in it. Which, of course, explains its beauty.
 
 To get started, let's pull a quote from the worlds first hook.io [blog entry][firstblog] by [Charlie Robbins][charlie]:
 
