@@ -2,8 +2,8 @@
 title: Hook.io For Dummies, Part 1 - Introduction
 date: 2011-09-23
 excerpt: An high level and quite basic overview of hook.io, an I/O framework for node.js that makes it easy to create highly modularized and loosely coupled applications.
-category: tutorial
 layout: post
+comments: true
 ---
 
 I recently jumped on the [node.js][] wagon and began browsing around for interesting ideas associated with it. (If you don't know anything about node.js, stop reading now.) A few days ago I stumbled upon [hook.io][] and immediately felt it might be a little game-changer; something to invest knowledge in so you can hang out with the cool guys at JSConf and to keep up appearance in spite of having turned 50 or so. But the lack of a more slowly paced introduction for guys and gals that prefer a little more smooth-talking before going hard core with code was frustrating, so I decided to take on a grand endeavor and write the very first "Hook.io For Dummies" blog entry. All for my own education. Well, voilá, here it is. If it's helpful for someone else I'm happy.

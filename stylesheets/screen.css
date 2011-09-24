@@ -157,6 +157,13 @@ section#content {
   width: 65.4%;
 }
 
+/* comments --------------------- */
+
+section#comments {
+  float: left;
+  width: 65.4%;
+}
+
 
 /* sidebar  -------------------- */
 
