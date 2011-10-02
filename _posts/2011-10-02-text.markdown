@@ -1,0 +1,9 @@
+---
+title: Test
+date: 2011-10-02
+excerpt: Just a test page.
+layout: post
+comments: true
+---
+
+# Blah-blah
