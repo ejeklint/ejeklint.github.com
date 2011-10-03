@@ -11,6 +11,10 @@ Bacon ipsum dolor sit amet chicken bresaola chuck pork loin turkey sausage. Drum
 
 Haven't had enough of me? [Follow me on Twitter][twitter]. You may [contact me][contact] with questions or comments.
 
+And should you care, this is what I sometimes look like:
+
+![Per](/images/jag-m.png)
+
 [bacon]:   http://baconipsum.com/
 [twitter]: http://twitter.com/ejeklint
 [contact]: /contact
