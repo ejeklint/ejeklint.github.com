@@ -28,6 +28,13 @@ a:hover {
   color: #396482;
 }
 
+th, th {
+  color:       #222;
+  font-family: "Helvetica Neue", Helvetica, Calibri, Arial;
+  font-weight: 300;
+  font-size: 1.4em;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color:       #222;
   font-family: "Helvetica Neue", Helvetica, Calibri, Arial;
@@ -55,12 +62,19 @@ sup {
   font-size: .5em;
 }
 
+#dsq-content #dsq-comments .dsq-comment-message {
+  font-family: "Helvetica Neue", Helvetica, Calibri, Arial;
+  font-size: 1.4em;
+}
+
+#dsq-content .dsq-moderator .dsq-comment-header {
+	background-color: #f9f9e1;
+}
+
 aside p {
-  color:         #999;
- /* font-family:   "ff-tisa-web-pro-1","ff-tisa-web-pro-2"; */
-  font-family:   "PT Serif", serif;
-  font-size:     1.2em;
-  line-height:   1.3em;
+  color:         #666;
+/*  background-color: #f5eac7; */
+  font: 1.2em/1.3em "PT Serif", serif;
 }
 
 del {
