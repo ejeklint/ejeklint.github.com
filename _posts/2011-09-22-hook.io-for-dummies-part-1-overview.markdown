@@ -56,4 +56,4 @@ This hook does nothing except being a hook. As long as it is started first and t
 [videos]: https://github.com/hookio/tutorials "Short and very code-centric video tuts"
 [marak]: https://github.com/Marak "Marak Squires on GitHub"
 [charlie]: https://github.com/indexzero "Charlie Robbins on github"
-[part2]: http://ejeklint.github.com/2011-10-11-hook.io-for-dummies-part-2-getting-started
+[part2]: http://ejeklint.github.com/2011/10/11/hook.io-for-dummies-part-2-getting-started/ "Next chapter"

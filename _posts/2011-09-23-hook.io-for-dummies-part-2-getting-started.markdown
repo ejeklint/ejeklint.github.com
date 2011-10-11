@@ -154,4 +154,4 @@ Stunning, huh. I learned a lot from writing this. In next episode I'll walk thro
 [nodeinstall]: http://shapeshed.com/journal/setting-up-nodejs-and-npm-on-mac-osx/ "How to install node and npm from source on mac"
 [hookio-repl]: http://github.com/hookio/hookio-repl "hookio-repl"		
 [repl]: http://nodejs.org/docs/v0.5.7/api/repl.html "REPL documentation"
-[part3]: http://ejeklint.github.com/2011-10-11-hook.io-for-dummies-part-3-a-deeper-look/
+[part3]: http://ejeklint.github.com/2011/10/11/hook.io-for-dummies-part-3-a-deeper-look/ "Next chapter"
