@@ -1,0 +1,157 @@
+---
+title: Hook.io For Dummies, Part 2 - Getting Started
+date: 2011-10-11
+excerpt: How to install hook.io on Mac OS X and get started with developing.
+layout: post
+comments: true
+---
+
+> NOTE: This is work in progress, so do please comment and come back now and then.
+
+## Installation
+
+This is a bit OS X centric, sorry about that. Before thinking of hook.io, you must have node.js and it's package manager `npm` installed. It's not that complicated. For a very easy install, there's readymade OS X packages for node and npm [here][osxpackages]. Couldn't be any more relaxed than that, but I haven't tried it myself so no promises with that one.
+
+Should you prefer to have the latest and greatest, get the source and build it locally. For this, you will need Xcode installed so go get it on the [Mac App Store][mas] and have a break while it downloads and installs. Then start with node.js, following this [nice instruction][nodeinstall]. You will also need to know how to use the terminal, and some basic unix command. If you don't, you're reading the wrong tutorial.
+
+Done? OK, now on to hook.io itself. There are a number of ready-made hooks and installing one of them will install the hook.io framework as well. The hello world hook works fine. Install it with command:
+
+{% highlight bash %}
+npm install hook.io-helloworld -g
+{% endhighlight %}
+
+This is a very simple hook that emits a `helloworld` event every second. Try it out by starting it with command `hookio-helloworld` If all is fine you should get output like this:
+
+{% highlight bash %}
+prompt: hookio-helloworld
+helloworld    hook::listening   5000
+helloworld    hook::ready       5000
+helloworld    hello             Hello, I am helloworld
+helloworld    hello             Hello, I am helloworld
+...
+{% endhighlight %}
+
+Notice the little difference between the package you install, `hook.io-helloworld` and the executable you run with `hookio-helloworld`. The latter has no ´.´ in it. Why? No idea. But this is the naming scheme to stick with.
+
+If you start up more helloworld hooks, they will all listen for each others helloworld events and print them in a greeting bonanza, but I find this a rather messy example so let's move forward with our own coding.
+
+## Time To Code!
+
+Let's start the hook coding with the vanilla hook. It's very simple and will in this example act as the hub for event handling. If you are familiar with "Integration Patterns", hook.io is basically using the hub-and-spoke pattern, and our first hook will be the hub, as long as it's started first.
+
+Create a file named hook.js (for example), looking like this:
+
+{% highlight javascript %}
+#!/usr/bin/env node
+
+var Hook = require('hook.io').Hook;
+
+var hook = new Hook( {
+    name: 'vanilla-hook',
+    debug: true
+});
+
+hook.start();
+{% endhighlight %}
+
+In the same directory as where you put this file, install hook.io with command `npm install hook.io`. This will create a sub-folder named `node_modules` with all required things in it. Sure, it install hook.io again, but this time locally in the folder where you have your first home-cooked hook. This is a praxis with node-modules and not a bad thing so don't moan, just do it.
+
+Now start your first hook with command `node hook.js`. If all is well it will print out	
+
+{% highlight bash %}
+Name: vanilla-hook    hook::listening    Type: hook    Data: 5000
+Name: vanilla-hook    hook::started      Type: hook    Data: 5000
+Name: vanilla-hook    hook::ready        Type: hook    Data: null
+{% endhighlight %}
+
+Your first hook is up an running! It doesn't do much, but now you have the hook server established. It's name is `vanilla-hook` and it will debug-print on standard out since you told it so in the configuration parameters with which you instantiated the hook. You could also have started it with command `node hook`, the `.js` part isn't needed as node will figure that out itself. Or simply with `hook.js`, if you first made the file executable with `chmod +x hook.js`. The shell will see the first line in the file and understand to run it in node.
+
+To immediately test that the hook system works with your vanilla hook as server, a ready-made hook called [hookio-repl][] comes very handy. It's basically a hook with an interactive node "REPL" available. The node documentations says this about REPL:
+
+> A Read-Eval-Print-Loop (REPL) is available both as a standalone program and easily includable in other programs. REPL provides a way to interactively run JavaScript and see the results. It can be used for debugging, testing, or just trying things out.
+
+If you want to know more about the REPL, read more [here][repl]. Install hookio-repl with `npm install hook.io-repl -g` (the -g flag makes is universally installed) and run it with `hookio-repl` in a new terminal window. Notice that it starts in console mode; you can interact with it directly from the command line. Lets try to send an event:
+
+{% highlight bash %}
+hook.emit('foo::bar');
+{% endhighlight %}
+
+Now have a look in the terminal window where you launched the vanilla hook. It should print out something like
+
+{% highlight bash %}
+Name: vanilla-hook  replhook::foo::bar   Type: hook   Data: null
+{% endhighlight %}
+
+Who-hoo!  
+
+## A Look Into Events
+
+Time to talk about events. An event is a basically a message sent over TCP. All events have a name (a string) and optionally some payload like another string or an object. Event names can be simple like `notify`, or composed like `boxcar::notify`. The `::` is the separator between the parts in the name. You can, in theory, compose an event name as much as you like, like `a::b::c::d::e` and so on, but don't over-engineer it. Less is more.
+
+The current release of hook.io prepends the event name with the emitting hook names and that can be a bit confusing. So if hook `MyHook` emits event `x::y`, the actual event name will be `MyHook::x::y`. To match and catch this event in another hook it should listen for `x::y`. The emitting hook name part is ignored when matching for listeners.	
+
+The composition of event names makes it easy to use wildcards and listen for a whole group of events. Having the events `noise::ding`, `noise::honk`, `sound::ding`, and `sound::dong`,
+you can listen for both `noise` events with `*::noise::*`, And with `*::*::ding` you listen both for `noise::ding` and `sound::ding`. The wildcard can also be used when emitting events, like `noise::*`.
+
+Support for multi-level wildcards will be added in coming versions of hook.io. But for now, the examples below should help you figure out how it work. Assume the emitting hook is named `MyHook`. 
+
+| Event As Emitted | Actual Event Name | How To Catch It
+|:-|:-|:-
+| `ding` | `MyHook::ding` | `*::ding`
+| `noise::ding` | `MyHook::noise::ding` | `*::noise::ding` <br> `*::noise::*` <br> `*::*::ding`
+| `*::ding` | `MyHook::*::ding` | `*::*::ding` <br> `*::bar::ding` <br> `*::foo::ding`
+
+Nota Bene! This is only valid when sending from a "non-root" hook! If you emit the events from a root hook, like what you get if you start hookio-repl first of all, the emitted events will NOT be prepended by the emitting hook name.
+
+Still confused? So am I. But expect this to be changed for the better in next major release of hook.io.
+
+Last word on events for this time: if you think it's a great idea to emit an event ending with wildcard, like `foo::*`, please re-think. It will crash current version of hook.io badly. 
+
+## Act on events
+
+So now you know how to format and send events. To receive and act on events you tell your hook to listen to a certain event, and give it callback function to call when that event is received. 
+
+{% highlight javascript %}
+self.on("foo::bar", function (data) {
+    // Do something
+});
+{% endhighlight %}
+
+This piece of code registers a listener for the "foo::bar" event. The call back function will be called when this event is received, and if there is a payload associated with the event, it will be available in parameter "data".
+
+Just to get a feel for it, make the vanilla hook a little more beefy. In the code below, two listeners are added. First call with `hook.on(…)` registers a listener for the `hook::ready` event. This is sent to every hook when it's launched and properly connected to the "hook cloud". The second call, `hook.onAny(…)` registers a listener for any event. In the callback function supplied, we just printout the current event name, which is always available in the hook's `event` property, followed by the payload if there is one.
+ 
+{% highlight javascript %}
+#!/usr/bin/env node	
+
+var Hook = require('hook.io').Hook;
+var hook = new Hook( {
+	  name: 'vanilla-hook',
+	  debug: false
+	});
+
+// Register listener for hook::ready event	
+hook.on('hook::ready', function (data) {
+	console.log('hook started');
+});
+	
+// register listener for any events
+hook.onAny(function(data) {
+  console.log(hook.event + ' Data: ' + JSON.stringify(data));
+});
+
+hook.start();
+{% endhighlight %}
+
+So the vanilla hook is now a simple logging hook! This is of course a stupid logger since it adds nothing more than what you get when the hook is in debug mode, but at least you now know how to listen for events.
+
+## Conclusion
+
+Stunning, huh. I learned a lot from writing this. In next episode I'll walk through my first ever hook that actually does something. [Let's go!][part3]
+
+[osxpackages]: https://sites.google.com/site/nodejsmacosx/ "Readymade packages"
+[mas]: http://itunes.apple.com/se/app/xcode/id448457090?mt=12 "Xcode on Mac App Store"
+[nodeinstall]: http://shapeshed.com/journal/setting-up-nodejs-and-npm-on-mac-osx/ "How to install node and npm from source on mac"
+[hookio-repl]: http://github.com/hookio/hookio-repl "hookio-repl"		
+[repl]: http://nodejs.org/docs/v0.5.7/api/repl.html "REPL documentation"
+[part3]: http://ejeklint.github.com/2011-10-11-hook.io-for-dummies-part-3-a-deeper-look/

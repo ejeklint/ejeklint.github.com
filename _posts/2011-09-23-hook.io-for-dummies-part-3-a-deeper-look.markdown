@@ -1,0 +1,195 @@
+---
+title: Hook.io For Dummies, Part 3 - A Deeper Look
+date: 2011-10-11
+excerpt: Write your own hook! Read all about it here.
+layout: post
+comments: true
+---
+
+In this part we will learn how a hook is structured and what it takes to develop and share it. This hook already exists on [github][boxcar] and you can download the code from there. This hook makes use of an already available npm module that makes it easy to use the [Boxcar][boxcar] service for sending events to iOS devices.
+
+## How A Hook Is Structured
+
+This image shows how a hook should be structured. This happens to be the convention with node modules, and by now you probably know that hooks are just that - node modules.
+
+![Monolith](/images/structure.png "Structure of a hook")
+
+In `bin/boxcar` we put the code that makes the hook a complete node program, capable of running on itself. This requires that we "require" the needed code from elsewhere, instantiate a hook and start it. Look at the example below, you will get it.
+
+{% highlight javascript %}
+#!/usr/bin/env node
+
+var BoxcarHook = require('../lib/boxcar').BoxcarHook;
+
+var myhook = new BoxcarHook({
+    name: "the-boxcar-hook",
+    debug: true
+});
+
+myhook.start();
+{% endhighlight %}
+
+That's all. The rest of the functionality resides in `lib/boxcar.js`. While it has quite a few more lines it's not very complicated. Have a look and the code below, the comments in it should explain what's going on.
+
+{% highlight javascript %}
+// The modules this hook requires
+var Hook = require('hook.io').Hook,
+    util = require('util'),
+    Provider = require('boxcar').Provider,
+    User = require('boxcar').User;
+
+// Things we need to access in different functions   
+var settings, provider, user;
+
+// Set up the boxcar hook, and export it at the same time
+var BoxcarHook = exports.BoxcarHook = function(options) {
+  var self = this;
+  Hook.call(self, options); // Basic initializations
+
+  settings = self.boxcar; // Reads the configuration file
+
+  provider = new Provider(settings.providerKey,
+    settings.providerSecret);
+  user = new User(settings.username,
+    settings.password);
+
+  // Register callback for hook::ready event
+  self.on('hook::ready', function() {
+    // When hook is ready, register callbacks for boxcar events
+    self.on('*::subscribe', function(data) {
+      self.subscribe(data);
+    });
+    self.on('*::notify', function(data) {
+      self.notify(data);
+    });
+    self.on('*::broadcast', function(data) {
+      self.broadcast(data);
+    });
+    self.on('*::notifyUser', function(data) {
+      self.notifyUser(data);
+    });
+  });
+  
+  // Make boxcar-api module catch it's own events
+  // and re-emit them as hook events
+  provider.on('response', function (responseBody) {
+    self.emit('boxcar::response', responseBody);
+  });
+  user.on('response', function (responseBody) {
+    self.emit('boxcar::response', responseBody);
+  });
+  
+};
+
+// Set up inheritance from Hook
+util.inherits(BoxcarHook, Hook);
+
+// Callbacks defined below
+
+BoxcarHook.prototype.subscribe = function(email) {
+  provider.subscribe(email);
+}
+
+BoxcarHook.prototype.notify = function(options) {
+  provider.notify(
+    options.email,
+    options.message,
+    settings.fromScreenName,
+    settings.fromRemoteServiceId,
+    settings.redirectPayload,
+    settings.sourceUrl,
+    settings.iconUrl
+  );
+}
+
+BoxcarHook.prototype.broadcast = function(message) {
+  provider.broadcast(
+    message,
+    settings.fromScreenName,
+    settings.fromRemoteServiceId,
+    settings.redirectPayload,
+    settings.sourceUrl,
+    settings.iconUrl
+  );
+}
+
+BoxcarHook.prototype.notifyUser = function(message) {
+  user.notify(
+    message,
+    settings.fromScreenName,
+    settings.fromRemoteServiceId,
+    settings.sourceUrl,
+    settings.iconUrl
+  );
+}
+{% endhighlight %}
+
+That's all the code for our boxcar hook! 
+
+## Hook Configuration
+
+Configuration is done by providing a `config.json` file, residing in the top folder.  Here's the actual configuration file for the boxcar hook:
+
+{% highlight javascript %}
+{
+  "boxcar": {
+    "providerKey": "fF465Z...",
+    "providerSecret": "3G6kpK...",
+    "username": "...",
+    "password": "...",
+    "fromScreenName": "",
+    "fromRemoteServiceId": "",
+    "redirectPayload": "",
+    "sourceUrl": "",
+    "iconUrl": ""
+  }
+}
+{% endhighlight %}
+
+Pretty straight on. Look back on the former code example to see how easy it is to red the configuration file and access it's data; all settings are read with the call `settings = self.boxcar` and an individual setting is referenced with `settings.iconUrl`, for example. 
+
+One step is left before we have a complete hook and that's to add meta data about the hook's dependencies and other stuff.
+
+## Hook packaging
+
+Below is the meta data for the boxcar hook. It's stored in the file `package.json` which must reside in the top folder:
+
+{% highlight javascript %}
+{
+  "author": "Per Ejeklint <ejeklint@me.com>",
+  "name": "hook.io-boxcar",
+  "description": "Provides a hook to your Boxcar service,
+     sending and receiving notifications",
+  "keywords" : [ "hook", "hook.io", "boxcar", "push",
+    "notifications", "push notifications", "iphone"],
+  "version": "0.1.0",
+  "bugs" : { "web" : "http://github.com/ejeklint/boxcar/issues" },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ejeklint/boxcar.git"
+  },
+  "bin": {
+     "hookio-boxcar": "./bin/boxcar"
+   },
+  "main": "./lib/boxcar",
+  "engines": {
+    "node": ">= v0.4.7"
+  },
+  "dependencies": {
+    "hook.io" : "0.7.x",
+    "boxcar": "0.9.x"
+  },
+  "devDependencies": {}
+}
+{% endhighlight %}
+
+## Make your hook available
+
+Open Source software isn't only about open source, it's also about sharing and contributing. So if you write a hook that might be useful for someone else, please distribute it! It's actually very easy since the `package.json` file contains all that is needed for the `npm` tool to be able to upload the hook to the npm repository. This is a bit out of scope for this tutorial so I just forward you to [the npm documentation][npm] instruction.
+
+## Conclusion
+
+You should now have quite a good idea of what hook.io is about, how to use it and how to write your own hook. If not, I've done a bad job and need feedback. Hit to the comment field below and tell me what you think!
+
+[boxcar]: http://github.com/ejeklint/boxcar "The Boxcar hook"
+[npm]: http://npmjs.org/doc/developers.html "npm for developers"
