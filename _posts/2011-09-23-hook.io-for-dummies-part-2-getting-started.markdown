@@ -16,20 +16,26 @@ Should you prefer to have the latest and greatest, get the source and build it l
 
 Done? OK, now on to hook.io itself. Let's install the core/basic/vanilla thing. Open your terminal and:
 
+{% highlight bash %}
     npm install hook.io -g
+{% endhighlight %}
 
 The hook.io framework will now be installed. Start the vanilla hook and look at the result:
 
+{% highlight bash %}
     hookio
     Name: the-hook  hook::listening   Type: hook   Data: 5000 ... 
     Name: the-hook  hook::started     Type: hook   Data: 5000 ... 
     Name: the-hook  hook::ready       Type: hook   Data: {"name":"the-hook", ... 
+{% endhighlight %}
 
 Open a new terminal window and start a new hook. Notice the difference in what they print out. The first you started became the server and is listening. The second one connected to the already running hook. And it should be rather obvious that this vanilla hook already knows a few tricks, like logging to STDOUT.
 
 Another nice thing is that you can interact with the vanilla hook, the Read-Eval-Print-Loop (REPL) is available in hookio's core functionality. REPL provides a way to interactively run JavaScript and see the results. It can be used for debugging, testing, or just trying things out. So start yet a new terminal window and start a hook with
 
+{% highlight bash %}
     hookio --repl
+{% endhighlight %}
 
 and you can now interact with your little hook system. For example, just type `hook` and you will see a JSON object describing the current configuration of the hook. Or type `hook.emit('foo::bar');` and you have just sent your first event! The server hook will log it and redistribute it to all other client hooks. And they will just ignore it since they are not told to act on such an event.
 
@@ -37,16 +43,20 @@ If you want to know more about the REPL, read more [here][repl].
 
 There are a number of ready-made hooks if you want to study something a little more complicated than the vanilla hook. You could try the hello-world hook for example:
 
+{% highlight bash %}
     npm install hook.io-helloworld -g
+{% endhighlight %}
 
 This is a very simple hook that emits a `helloworld` event every second. Try it out by starting it with command `hookio-helloworld` If all is fine you should get output like this:
 
+{% highlight bash %}
     prompt: hookio-helloworld
     helloworld    hook::listening   5000
     helloworld    hook::ready       5000
     helloworld    hello             Hello, I am helloworld
     helloworld    hello             Hello, I am helloworld
     ...
+{% endhighlight %}
 
 By the way, notice the little difference between the package you install, `hook.io-helloworld` and the executable you run with `hookio-helloworld`. The latter has no ´.´ in it. This is the naming scheme and you shoud stick with when building your own hooks.
 
@@ -75,9 +85,11 @@ In the same directory as where you put this file, install hook.io with command `
 
 Now start your first hook with command `node hook.js`. If all is well it will print out	
 
+{% highlight bash %}
     Name: vanilla-hook    hook::listening    Type: hook    Data: 5000
     Name: vanilla-hook    hook::started      Type: hook    Data: 5000
     Name: vanilla-hook    hook::ready        Type: hook    Data: null
+{% endhighlight %}
 
 Your first hook is up an running! It doesn't do anything more than the vanilla hook in core, but you have the code base for your first hook established. It's name is `vanilla-hook` and it will debug-print on standard out since you told it so in the configuration parameters with which you instantiated the hook. You could also have started it with command `node hook`, the `.js` part isn't needed as node will figure that out itself. Or simply with `hook.js`, if you first made the file executable with `chmod +x hook.js`. The shell will see the first line in the file and understand to run it in node.
 
