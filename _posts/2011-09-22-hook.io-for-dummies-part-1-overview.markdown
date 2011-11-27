@@ -6,11 +6,13 @@ layout: post
 comments: true
 ---
 
+**NOTE!** Updated 2011-11-27 to reflect hook.io 0.8.2.
+
 I recently jumped on the [node.js][] wagon and began browsing around for interesting ideas associated with it. (If you don't know anything about node.js, stop reading now.) A few days ago I stumbled upon [hook.io][] and immediately felt it might be a little game-changer; something to invest knowledge in so you can hang out with the cool guys at JSConf and to keep up appearance in spite of having turned 50 or so. But the lack of a more slowly paced introduction for guys and gals that prefer a little more smooth-talking before going hard core with code was frustrating, so I decided to take on a grand endeavor and write the very first "Hook.io For Dummies" blog entry. All for my own education. Well, voilá, here it is. If it's helpful for someone else I'm happy.
 
 ## What is hook.io?
 
-[hook.io][] is the brainchild of [Marak Squires][marak] and it's currently in version 0.7-something. But it's not that new, Marak has been working on it since 2006, and it's now in its 7th iteration. So there's a lot of thinking and refactoring in it. Which, of course, explains its beauty.
+[hook.io][] is the brainchild of [Marak Squires][marak] and it's currently in version 0.8-something. But it's not that new, Marak has been working on the idea since 2006, and it's now in its 7th iteration. So there's a lot of thinking and refactoring in it. Which, of course, explains its beauty.
 
 To get started, let's pull a quote from the worlds first hook.io [blog entry][firstblog] by [Charlie Robbins][charlie]:
 
@@ -32,19 +34,17 @@ The first hook to start up automatically becomes the _server hook_, sometimes re
 
 ![Hook server and clients](/images/server-clients.png "A server hook and three clients")
 
-## What Does A Real Hook.io Application Look Like?
+Now consider the server hook's role for a while. It's responsible for listen for all incoming events and re-distribute them to all clients, except the one that sent the event. So it becomes a single point of failure; should it go down for some reason, like adding new functionality to it or just crashing, the application as a whole will stop working since no events will be propagated.
 
-In part 2 of this this series, we will build a simple hook.io-based application, but before that it's worth considering a good praxis that I suspect will be common, and it concerns the server hook, the one that is first launched (or explicitly told to start as server). It is the server hook's responsibility to listen for all incoming events and re-distribute them to all clients, except the one that sent the event. So it becomes a single point of failure; should it be stopped for some reason, like adding new functionality to it, the application as a whole will stop working since no events will be propagated.
-
-It is thus fairly safe to say that a good design pattern is to have a server hook that does nothing more than being the server. In his nice and short [video tutorias][videos], Marak calls it the "vanilla hook". It contains no custom code what so ever. In fact, it's so simple that I can show it right now, you won't faint:
+It is thus fairly safe to say that a good design pattern is to have a server hook that does nothing more than just being the server. Don't be tempted to add all sorts of stuff to it just to keep your "hook count" low. In his nice and short [video tutorias][videos] (which are slightly outdated as they concern an older version), Marak calls it the "vanilla hook" and that's a fitting label. It contains no custom code what so ever. In fact, it's so simple that I can show it right now, you won't faint:
 
 {% highlight javascript %}
-	var Hook = require('hookio').Hook;
-	var hook = new Hook();
-	hook.start();
+var Hook = require('hookio').Hook;
+var hook = new Hook();
+hook.start();
 {% endhighlight %}
 
-This hook does nothing except being a hook. As long as it is started first and thus become the server hook, it will listen for incoming events and redistribute them to connected client hooks. That's all.  So with this said about the "vanilla hook", I end this chapter with an updated illustration of what a hook.io-based application might look like. See you in [next chapter][part2]! :)
+This hook does nothing except being a hook. As long as it is started first and thus become the server hook, it will listen for incoming events and redistribute them to connected client hooks. That's all. So with this said about the "vanilla hook", I end this chapter with an updated illustration of what a hook.io-based application might look like. See you in [next chapter][part2]! :)
 
 ![Hook server and clients](/images/hook-app.png "A hook.io application, roughly")
 

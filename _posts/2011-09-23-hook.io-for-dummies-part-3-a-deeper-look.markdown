@@ -6,11 +6,18 @@ layout: post
 comments: true
 ---
 
+**NOTE!** Updated 2011-11-27 to reflect hook.io 0.8.2.
+
 In this part we will learn how a hook is structured and what it takes to develop and share it. This hook already exists on [github][boxcar] and you can download the code from there. This hook makes use of an already available npm module that makes it easy to use the [Boxcar][boxcar] service for sending events to iOS devices.
 
 ## How A Hook Is Structured
 
-This image shows how a hook should be structured. This happens to be the convention with node modules, and by now you probably know that hooks are just that - node modules.
+This image shows how a hook should be structured. This happens to be the convention with node modules, and by now you probably know that hooks are just that - node modules. With the 0.8 release of hook.io it's super simple to get started writing your own hooks since it has scaffolding build it. I'm going to build a hook called hookio-boxcar and keep the code in the folder "boxcar" so I ask hook.io for help:
+
+    mkdir boxcar; cd boxcar
+    hookio init boxcar
+
+This will create file structure with some templates in it. 
 
 ![Monolith](/images/structure.png "Structure of a hook")
 
@@ -146,7 +153,7 @@ Configuration is done by providing a `config.json` file, residing in the top fol
 }
 {% endhighlight %}
 
-Pretty straight on. Look back on the former code example to see how easy it is to red the configuration file and access it's data; all settings are read with the call `settings = self.boxcar` and an individual setting is referenced with `settings.iconUrl`, for example. 
+Pretty straight on. Look back on the former code example to see how easy it is to read the configuration file and access it's data; all settings are read with the call `settings = self.boxcar` and an individual setting is referenced with `settings.iconUrl`, for example.
 
 One step is left before we have a complete hook and that's to add meta data about the hook's dependencies and other stuff.
 
@@ -162,8 +169,8 @@ Below is the meta data for the boxcar hook. It's stored in the file `package.jso
      sending and receiving notifications",
   "keywords" : [ "hook", "hook.io", "boxcar", "push",
     "notifications", "push notifications", "iphone"],
-  "version": "0.1.0",
-  "bugs" : { "web" : "http://github.com/ejeklint/boxcar/issues" },
+  "version": "0.2.0",
+  "bugs" : { "url" : "http://github.com/ejeklint/boxcar/issues" },
   "repository": {
     "type": "git",
     "url": "git://github.com/ejeklint/boxcar.git"
@@ -176,7 +183,7 @@ Below is the meta data for the boxcar hook. It's stored in the file `package.jso
     "node": ">= v0.4.7"
   },
   "dependencies": {
-    "hook.io" : "0.7.x",
+    "hook.io" : "0.8.x",
     "boxcar": "0.9.x"
   },
   "devDependencies": {}
@@ -185,11 +192,13 @@ Below is the meta data for the boxcar hook. It's stored in the file `package.jso
 
 ## Make your hook available
 
-Open Source software isn't only about open source, it's also about sharing and contributing. So if you write a hook that might be useful for someone else, please distribute it! It's actually very easy since the `package.json` file contains all that is needed for the `npm` tool to be able to upload the hook to the npm repository. This is a bit out of scope for this tutorial so I just forward you to [the npm documentation][npm] instruction.
+Open Source software isn't only about open source, it's also about sharing and contributing. So if you write a hook that might be useful for someone else, please distribute it! It's actually very easy since the `package.json` file contains all that is needed for the `npm` tool to be able to upload the hook to the npm repository. This is a bit out of scope for this tutorial so I just forward you to [the npm documentation][npm] instruction. And don't miss to fill in the keywords section, your hook will be found by more people as this keywords are used when npm searches in the repository.
+
+When open sourcing your hook, remember not to reveal any personal setting you might have in your config.json file. Instead, create a new folder called "examples" in your hook folder and put an example config.json file there, as I have done with [this][boxcar] hook.
 
 ## Conclusion
 
 You should now have quite a good idea of what hook.io is about, how to use it and how to write your own hook. If not, I've done a bad job and need feedback. Hit to the comment field below and tell me what you think!
 
-[boxcar]: http://github.com/ejeklint/boxcar "The Boxcar hook"
+[boxcar]: https://github.com/ejeklint/hook.io-boxcar "The Boxcar hook"
 [npm]: http://npmjs.org/doc/developers.html "npm for developers"
