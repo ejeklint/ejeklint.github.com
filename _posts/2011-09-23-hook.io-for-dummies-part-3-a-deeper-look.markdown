@@ -15,8 +15,8 @@ In this part we will learn how a hook is structured and what it takes to develop
 This image shows how a hook should be structured. This happens to be the convention with node modules, and by now you probably know that hooks are just that - node modules. With the 0.8 release of hook.io it's super simple to get started writing your own hooks since it has scaffolding build it. I'm going to build a hook called hookio-boxcar and keep the code in the folder "boxcar" so I ask hook.io for help:
 
 {% highlight bash %}
-    mkdir boxcar; cd boxcar
-    hookio init boxcar
+mkdir boxcar; cd boxcar
+hookio init boxcar
 {% endhighlight %}
 
 This will create file structure with some templates in it. 
