@@ -1,5 +1,6 @@
 /_site
 /_published
 .DS_Store
+/config.json
 bin/social_config.yml
 *.esproj
